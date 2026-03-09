@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en" data-theme="dark"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rey's Auto Spa | Cinematic Gallery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800&family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#0d0d12", "accent-gold": "#1A4FCC", "accent": "#1A4FCC", "ivory": "#FAF8F5", "background-light": "#f7f7f7", "background-dark": "#0d0d12", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "serif": ["Cormorant Garamond", "serif"], "mono": ["Space Mono", "monospace"], }, borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"}, }, }, }</script>
+<style>
+        .glass-nav {
+            background: rgba(13, 13, 18, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-nav::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3Cfilter id='noiseFilter'%3e%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3e%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3e%3C/svg%3e");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        .ambient-glow {
+            position: absolute;
+            width: 150px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(232, 175, 72, 0.1) 0%, transparent 70%);
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+        .active-indicator-container {
+            position: relative;
+            padding: 2px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+        }
+        /* Layer 1: Glow */
+        .indicator-glow {
+            position: absolute;
+            inset: -4px;
+            background: #4070E8;
+            filter: blur(12px);
+            opacity: 0.15;
+            border-radius: 20px;
+        }
+        /* Layer 2 & 3: Clip and Gradient */
+        .indicator-gradient {
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            overflow: hidden;
+            background: conic-gradient(
+                from 0deg, 
+                #071A6E 0%, #1539C0 15%, #B0CCFF 30%, #fff 31.5%, #B0CCFF 33%, 
+                #1539C0 45%, #071A6E 50%, 
+                #1539C0 65%, #B0CCFF 80%, #fff 81.5%, #B0CCFF 83%, 
+                #1539C0 95%, #071A6E 100%
+            );
+            animation: rotate-gradient 4.5s linear infinite;
+        }
+        @keyframes rotate-gradient {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        /* Layer 4: Inner Plate */
+        .indicator-inner {
+            position: relative;
+            z-index: 1;
+            background: rgba(13, 13, 18, 1);
+            border-radius: 16px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 16px;
+        }
+        .nav-divider {
+            width: 1px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 4px;
+        }
+        .theme-toggle:active {
+            transform: scale(1.25);
+            transition: transform 0.2s cubic-bezier(0.34, 1.5, 0.64, 1);
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+        @media (min-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        .aspect-portrait {
+            aspect-ratio: 3 / 4;
+        }
+@property --nav-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.nav-wrap { position: relative; background: rgba(13,13,18,0.82); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 5px 6px; display: flex; align-items: center; box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 0 0 0.5px rgba(255,255,255,0.04); overflow: hidden; }
+.nav-wrap::after { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='ng'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ng)'/%3E%3C/svg%3E"); opacity: 0.035; pointer-events: none; border-radius: 999px; z-index: 10; }
+.nav-ambient { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 120%, rgba(26,79,204,0.14) 0%, transparent 65%); pointer-events: none; border-radius: 999px; }
+.nav-indicator { position: absolute; top: 5px; left: 0; height: calc(100% - 10px); width: 70px; pointer-events: none; z-index: 1; transition: left 0.45s cubic-bezier(0.34,1.2,0.64,1), width 0.45s cubic-bezier(0.34,1.2,0.64,1); }
+.nav-ind-glow { position: absolute; inset: -5px; background: #4070E8; opacity: 0.15; filter: blur(10px); border-radius: 18px; }
+.nav-ind-clip { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; }
+.nav-ind-spin { position: absolute; inset: -50%; background: conic-gradient(from var(--nav-angle), #071A6E 0%, #0F2899 5%, #1539C0 13%, #4a7ae8 22%, #B0CCFF 29%, #4a7ae8 36%, #1539C0 41%, #0F2899 44%, #ffffff 46%, #ffffff 49%, #C8DFFF 50.5%, #90BFFF 51.5%, #1539C0 53%, #071A6E 56%, #0F2899 61%, #1539C0 68%, #4a7ae8 76%, #B0CCFF 80%, #4a7ae8 86%, #1539C0 91%, #0F2899 94%, #ffffff 96%, #ffffff 99%, #C8DFFF 99.5%, #90BFFF 100%); animation: nav-ring-spin 4.5s linear infinite; }
+@keyframes nav-ring-spin { from { --nav-angle: 0deg; } to { --nav-angle: 360deg; } }
+.nav-ind-inner { position: absolute; inset: 2px; background: rgba(13,13,18,0.97); border-radius: 16px; }
+.nav-items { display: flex; align-items: center; position: relative; z-index: 2; }
+.nav-link { padding: 9px 18px; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.25s; white-space: nowrap; }
+.nav-link:hover { color: rgba(255,255,255,0.82); }
+.nav-link.is-active { color: #B0CCFF; }
+.nav-sep { width: 1px; height: 16px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+.nav-theme-btn { position: relative; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.45); background: none; border: none; cursor: pointer; border-radius: 999px; transition: color 0.25s; }
+.nav-theme-btn:hover { color: rgba(255,255,255,0.82); }
+.nav-theme-btn .t-sun, .nav-theme-btn .t-moon { position: absolute; font-size: 18px; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease; }
+.nav-theme-btn .t-moon { transform: scale(0) rotate(-90deg); opacity: 0; }
+html.dark .nav-theme-btn .t-sun { transform: scale(0) rotate(90deg); opacity: 0; }
+html.dark .nav-theme-btn .t-moon { transform: scale(1) rotate(0deg); opacity: 1; }
+.nav-theme-btn.bounce-anim { animation: nav-theme-bounce 0.45s cubic-bezier(0.34,1.2,0.64,1); }
+@keyframes nav-theme-bounce { 0%,100% { transform: scale(1); } 45% { transform: scale(1.25); } }
+    </style>
+<style id="nb-styles">
+[data-theme="dark"] { --bg:#0D0D12; --text:#E8E4DC; --muted:rgba(232,228,220,0.44); --brd:rgba(26,79,204,0.14); --nav-bg:rgba(13,13,18,0.86); --gold:#1A4FCC; }
+[data-theme="light"] { --bg:#FAF8F5; --text:#2A2A35; --muted:rgba(42,42,53,0.5); --brd:rgba(42,42,53,0.12); --nav-bg:rgba(250,248,245,0.90); --gold:#1A4FCC; }
+.bmw-nav { position:fixed; top:0; left:0; right:0; z-index:9000; }
+.bmw-nav-inner { display:flex; align-items:center; height:72px; padding:0 clamp(24px,4vw,64px); }
+.bmw-logo { display:flex; align-items:center; gap:14px; text-decoration:none; flex-shrink:0; margin-right:44px; }
+.bmw-logo-mark { height:48px; width:auto; flex-shrink:0; transition:opacity 0.3s; }
+.bmw-logo-mark img { height:100%; width:auto; display:block; }
+.bmw-logo:hover .bmw-logo-mark { opacity:0.85; }
+.bmw-logo-text { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#fff; }
+.bmw-links { display:flex; align-items:center; gap:36px; }
+.bmw-link { position:relative; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.6); text-decoration:none; padding-bottom:3px; transition:color 0.25s; white-space:nowrap; }
+.bmw-link::after { content:''; position:absolute; bottom:0; left:0; right:0; height:1.5px; background:#1A4FCC; transform:scaleX(0); transform-origin:left; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+.bmw-link:hover { color:#fff; }
+.bmw-link:hover::after { transform:scaleX(1); }
+.bmw-link.is-active { color:#fff; }
+.bmw-link.is-active::after { transform:scaleX(1); }
+.bmw-nav-right { display:flex; align-items:center; gap:20px; margin-left:auto; }
+.bmw-theme-btn { width:32px; height:32px; background:none; border:none; cursor:pointer; color:rgba(255,255,255,0.5); display:flex; align-items:center; justify-content:center; transition:color 0.25s,transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+.bmw-theme-btn:hover { color:#fff; transform:rotate(20deg) scale(1.1); }
+.bmw-cta-btn { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:#fff; background:#1A4FCC; border:none; padding:12px 28px; text-decoration:none; flex-shrink:0; transition:background 0.25s,transform 0.15s; }
+.bmw-cta-btn:hover { background:#4A7AE8; transform:translateY(-1px); }
+.bmw-divider { height:1px; background:rgba(255,255,255,0.12); width:100%; }
+.gold-text { background:linear-gradient(135deg,#1539C0 0%,#B0CCFF 45%,#1A4FCC 70%,#0D2E99 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
+<!-- BMW Navigation -->
+<header class="bmw-nav" id="navbar">
+<div class="bmw-nav-inner">
+<a class="bmw-logo" href="index.html">
+<div class="bmw-logo-mark"><img src="logo.png" alt="Rey's Auto Spa Logo"/></div>
+<span class="bmw-logo-text">Rey's Auto Spa</span>
+</a>
+<nav class="bmw-links" id="nav-items">
+<a class="bmw-link" href="index.html">Home</a>
+<a class="bmw-link" href="services.html">Services</a>
+<a class="bmw-link" href="gallery.html">Gallery</a>
+<a class="bmw-link" href="contact.html">Contact</a>
+</nav>
+<div class="bmw-nav-right">
+
+<a class="bmw-cta-btn" href="tel:+16305418641">Book Now</a>
+</div>
+</div>
+<div class="bmw-divider"></div>
+</header>
+
+<!-- Hero Section -->
+<header class="relative pt-32 pb-16 px-6 max-w-7xl mx-auto text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 mb-6">
+<span class="text-[10px] font-bold tracking-[0.2em] uppercase text-slate-500">Portfolio</span>
+</div>
+<h1 class="text-5xl md:text-7xl font-black tracking-tighter mb-4 italic">OUR WORK</h1>
+<p class="text-slate-500 max-w-xl mx-auto text-lg">Real results from real vehicles. Browse our portfolio of ceramic coatings, paint corrections, and full details.</p>
+</header>
+<!-- Gallery Categories -->
+<div class="flex justify-center gap-4 px-6 mb-12 overflow-x-auto whitespace-nowrap">
+<button class="px-6 py-2 rounded-full bg-primary text-white text-sm font-medium border border-transparent">All Projects</button>
+<button class="px-6 py-2 rounded-full bg-transparent border border-slate-200 dark:border-slate-800 text-sm font-medium hover:border-accent-gold transition-colors">Supercars</button>
+<button class="px-6 py-2 rounded-full bg-transparent border border-slate-200 dark:border-slate-800 text-sm font-medium hover:border-accent-gold transition-colors">Macro Details</button>
+<button class="px-6 py-2 rounded-full bg-transparent border border-slate-200 dark:border-slate-800 text-sm font-medium hover:border-accent-gold transition-colors">Paint Correction</button>
+</div>
+<!-- Main Gallery Grid -->
+<main class="max-w-[1600px] mx-auto px-6 pb-24">
+<div class="gallery-grid gap-6">
+<!-- Row 1 -->
+<div class="group relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-900 aspect-video md:aspect-portrait">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Close up of a black luxury sports car hood with mirror-like reflection" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5VwYaORpZoLPaJ_rdffE-N1DQ1Iq9nvL2Mj0cYMDiCcNU6q8wvc2O4t6yvWEpiKmBcwIYnEx0LsZQKphvpglprm-DVmPYzyW_8bxHjNoGi7IxU0p-aXY6TlygAjp19qvknTXDIIfrC2gZGKEtKBKFL0WIdsgtM3U5KW8AbIspa4U-EtWLfzAxIIK-M8468_wVA5odU-77hbY-vQwwo1kxtIvLt9xzpYyl0IHpvH83lsZoeoDXTfPpGMA1KUQHeBq8aPL9lGM3wqLe')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+<p class="text-accent-gold text-xs font-bold tracking-widest uppercase mb-2">Stage 3 Detail</p>
+<h3 class="text-2xl font-bold text-white">Phantom Black GTR</h3>
+</div>
+</div>
+<div class="group relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-900 aspect-video md:aspect-portrait lg:mt-12">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Vintage Porsche 911 headlight detail with water beads" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1IEoCPyjQ9hJ6FsL4MX--hA5CMeEt0qNzOU8PrYiepdi7Nl4U4DVNVrkdUmb0q027ORhJzgzTYbPyW_7VTZu9huXJWLAcfF3Ocv9HfU54lM7wA1Owk2UgZAyoNsTxiLfFM5K6_dIQUZBeyZJDTcsqfMnhaAZxwtYOpxjDxeOdLhNv_ZbRaClNeBKynvDic9KG6OTQZ4O0e0an_4WE1mA-YtYLabAFqhnl7ewNAYqww9UB6gD74dVaAU3_G1IOMe2mNI2Y4F35b6ve')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+<p class="text-accent-gold text-xs font-bold tracking-widest uppercase mb-2">Preservation</p>
+<h3 class="text-2xl font-bold text-white">Heritage 911</h3>
+</div>
+</div>
+<div class="group relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-900 aspect-video md:aspect-portrait">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Macro shot of red Ferrari paint reflecting studio lights" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCVP0pbFY2lw4vnJYw0HtZQib5cAyt45qhRsLjjSSbmClrZ8ue0LBP2NXD9LynMa7YkZI0jR4Ver2tacLNlPQwJSUEH1vmx6qjR3K58wYAbqu-dGyLTOPbV1mvqae5BCZESuNacri7fJIr8r35oCU0_ZMyh-cI6e72hoYhqPSogg6ORQ7t0aWw2-vy4P9kIueqDXb3IBRmKupyhVooERMXJ8CF1t0oY0NCp0qjcinZBwk52mw4b3R0GdScLrbEBBK3nXn-2oiBD5tpa')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+<p class="text-accent-gold text-xs font-bold tracking-widest uppercase mb-2">Ceramic Coating</p>
+<h3 class="text-2xl font-bold text-white">Rosso Corsa F8</h3>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="group relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-900 aspect-video md:aspect-portrait lg:-mt-12">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Interior luxury leather dashboard of a Mercedes Maybach" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAhavBuL-ELdcPk-X1sHOXOvUaJ0ZJanvPJB-_a_yWuc4yvAerkQLS9cR9AhWARoeRuHImvkVoCWow0Pb1oPEHXjH0Bkx1r3_TZwJexkfd4SEl47FtVBkSEBoliOV_st2lZ0fNvhBjD7cYjzdm9wTjBGXgOv7H5Dj61pXCzsOOyDg1CMDg_SqBA8z5jfzuWtdAUr9eJzEjk13gMZ38cfRIq43mFpzHyQ5YcCTPlI0uDC6foVbzootM2vMxOt6NU6Jonpf_cCfH2m5fO')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+<p class="text-accent-gold text-xs font-bold tracking-widest uppercase mb-2">Interior Luxe</p>
+<h3 class="text-2xl font-bold text-white">Maybach Cabin</h3>
+</div>
+</div>
+<div class="group relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-900 aspect-video md:aspect-portrait">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Close up of a forged carbon fiber wing on a Lamborghini" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAop638vH14_eNRAI32ocXBdZciVzmv5nxZMKYyXBYbKC0NzfqN9jIAPjKPfZ9KkAJ9nqg_P7SdWOObClczO3-DwdKM_saG0QTBsCiaM3RSU_XTAniEto9Js7EJ79X2U1LtbrHu8MWYY1gPO3jKo9xdNWYB_HxFUHNg10Z3UK9j4y-xpm42lPqK-6pUxg73SmDRkvqKzaqQ23PbYth7JSR-lrjTFHJVWJwxBtc-qyLGLG61xQ65fERS0Mh831FvTBjSy1muYuxd7URu')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+<p class="text-accent-gold text-xs font-bold tracking-widest uppercase mb-2">Surface Correction</p>
+<h3 class="text-2xl font-bold text-white">Forged Carbon</h3>
+</div>
+</div>
+<div class="group relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-900 aspect-video md:aspect-portrait lg:mt-12">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Chevrolet Corvette wheel and brake caliper detail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAYa8CG9EeWgiOkc5JKFw3H7et1ttEjiiKga42ufi2_1OrkFF7jilsh4FJ3qJKklBTsHlfJWfc5azPFAnifkRZWubtnWX3CwrG3iQUyJ69bsk_KkEqPfPwHXFxRjHcWZCfmmD__ZGmJjEsWoBi8sE3vjqPVwn4jtlwfWtt7Ep0jp9PIYzotSgdy7baxt3b0yjH2VuIAXMNoS5TZMsdpTs8NwTvGHUIv8y85bPyKou2IhYuqfzHYAriuPmBr141fNYoJlO_KqQyNp82H')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+<p class="text-accent-gold text-xs font-bold tracking-widest uppercase mb-2">Wheel Protection</p>
+<h3 class="text-2xl font-bold text-white">Vette Z06 Rims</h3>
+</div>
+</div>
+</div>
+</main>
+<!-- Lightbox Mockup Overlay (Hidden by default, shown here as reference) -->
+<div class="fixed inset-0 z-[100] bg-background-dark/95 backdrop-blur-xl flex flex-col hidden">
+<div class="p-6 flex justify-between items-center">
+<div class="text-white">
+<p class="text-[10px] tracking-widest uppercase text-accent-gold">Case Study #042</p>
+<h4 class="text-lg font-bold italic">Phantom Black GTR</h4>
+</div>
+<button class="w-12 h-12 rounded-full border border-slate-700 flex items-center justify-center text-white">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 flex items-center justify-center px-12">
+<div class="w-full h-full max-h-[70vh] rounded-xl overflow-hidden bg-slate-900">
+<img alt="Fullscreen luxury car detail" class="w-full h-full object-contain" data-alt="Fullscreen high resolution view of car detailing work" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_zPTD7dba2eBtc6dh7W7WpLcu1RColB2KsXj9yWo4blU7d-oeHLvvSJdmTOZCVOtt73yPw6wmltTGdSLRk1PdzG06rABDKarmBCwwIOBFXkdhtIw9MzSQUr-MvdAAgGgoEeirRw_W_ZE7c6Y9q-34IC4lhlwkMPtIIhz0TLT6Ab3vG9-fK-93VAAInh-WDN0wBA8z0LxPAc4TEkaizk6SiElqGwuI54C7wRZICZKpCbSmGap9v_Yvh6KYbBQekROIe9KkTl2dTTTk"/>
+</div>
+</div>
+<div class="p-12 grid grid-cols-4 gap-8 text-white/50 text-xs tracking-widest uppercase">
+<div><span class="block text-white mb-1">Service</span>Paint Correction</div>
+<div><span class="block text-white mb-1">Coating</span>Modesta BC-04</div>
+<div><span class="block text-white mb-1">Time taken</span>42 Hours</div>
+<div><span class="block text-white mb-1">Location</span>Rey's Auto Spa</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800 py-20 px-6">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+<div class="flex items-center gap-4">
+<img src="logo.png" alt="Rey's Auto Spa" style="height:48px;width:auto;">
+<h2 class="text-xl font-bold italic">REY'S AUTO SPA</h2>
+</div>
+<div class="flex gap-12 text-sm font-medium">
+<a class="hover:text-accent-gold transition-colors" href="#">Instagram</a>
+<a class="hover:text-accent-gold transition-colors" href="#">Vimeo</a>
+<a class="hover:text-accent-gold transition-colors" href="#">Contact</a>
+</div>
+<p class="text-slate-500 text-xs">© 2024 Rey's Auto Spa Automotive Detailers.</p>
+</div>
+</footer>
+<script>(function(){
+var links=document.querySelectorAll('.bmw-link');
+var page=location.pathname.split('/').pop()||'index.html';
+if(!page.endsWith('.html'))page='index.html';
+links.forEach(function(a){if(a.getAttribute('href')===page)a.classList.add('is-active');else a.classList.remove('is-active');});
+var dark=document.documentElement.getAttribute('data-theme')!=='light';
+document.getElementById('theme-btn').addEventListener('click',function(){
+dark=!dark;var t=dark?'dark':'light';
+document.documentElement.setAttribute('data-theme',t);
+document.documentElement.classList.toggle('dark',dark);
+document.getElementById('i-sun').style.display=dark?'block':'none';
+document.getElementById('i-moon').style.display=dark?'none':'block';
+var b=document.getElementById('theme-btn');
+b.style.transform='rotate(360deg) scale(1.1)';
+setTimeout(function(){b.style.transform='';},400);
+});
+}());</script>
+</body></html>
